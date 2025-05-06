@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: stg_doc_planner_external__external_bookings
+    description: >
+      Contains data on bookings made through external systems by doctors or clinics
+      through integrated external systems (e.g., phone, other booking platforms).
+
+    columns:
+      - name: booking_id
+        description: Unique identifier for the external booking.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: patient_id
+        description: Identifier of the patient associated with the booking.
+        data_tests:
+          - not_null
+      - name: booking_type
+        description: Indicates the nature or category of the booking (e.g., online, offline).
+
+      - name: booked_by
+        description: Source of the booking action (e.g., doctor, secretary).
+        data_tests:
+        - accepted_values:
+              values: ['doctor', 'secretary']
+      - name: calendar_id
+        description: Identifier for the calendar (schedule/location) where the visit is booked.
+
+      - name: doctor_id
+        description: Identifier of the doctor assigned to the visit, if applicable.
+
+      - name: booking_date_time
+        description: Timestamp when the visit is scheduled to occur.

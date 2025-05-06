@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: stg_doc_planner__patients
+    description: >
+      Contains demographic and basic registration data for patients using the platform.
+      Each row represents a unique patient and includes identifying information such as
+      name, age, gender, and account creation timestamp.
+
+    columns:
+      - name: patient_id
+        description: Unique identifier for each patient.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: patient_name
+        description: First name of the patient.
+        data_tests:
+          - not_null
+      - name: patient_surname
+        description: Last name (surname) of the patient.
+        data_tests:
+          - not_null
+      - name: patient_age
+        description: Age of the patient at the time of record.
+
+      - name: gender
+        description: Gender of the patient, if provided.
+
+      - name: created_at
+        description: Timestamp when the patient profile was created in the system.
+        data_tests:
+          - not_null

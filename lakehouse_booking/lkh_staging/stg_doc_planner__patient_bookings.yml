@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_doc_planner__patient_bookings
+    description: >
+      Model representing all patient-initiated bookings. Each record reflects a scheduled visit
+      booked through one of several interfaces (e.g., mobile app, desktop site) either for the patient
+      themselves or on behalf of someone else (e.g., children). Used to track patient engagement,
+      booking behavior, and doctor availability.
+
+    columns:
+      - name: booking_id
+        description: Unique identifier for the booking.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: patient_id
+        description: Identifier for the patient associated with the booking.
+        data_tests:
+          - not_null
+      - name: booking_type
+        description: Type of booking (e.g., online, offline).
+      - name: booked_by
+        description: Indicates who created the booking (e.g., patient, relative to patient(in the case patient is a minor)).
+        data_tests:
+        - accepted_values:
+              values: ['patient', 'relative to patient']
+      - name: calendar_id
+        description: Identifier of the calendar (location/service context) where the booking was made.
+      - name: doctor_id
+        description: Identifier of the doctor associated with the booking, if applicable.
+      - name: booking_date_time
+        description: Timestamp when the booking is scheduled to take place.
+        data_tests:
+          - not_null

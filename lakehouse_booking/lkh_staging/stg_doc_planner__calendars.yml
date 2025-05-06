@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: stg_doc_planner__calendars
+    description: >
+      This model extracts and documents all calendars used for scheduling visits.
+      A calendar represents a virtual mapping of a doctor's availability at a specific location or for a specific clinic service.
+      Calendars can be associated with individual doctors or clinic branches, and may refer to a physical location or a type of service
+      (e.g., blood testing, x-rays) without a specific doctor assigned.
+
+    columns:
+      - name: calendar_id
+        description: Unique identifier for the calendar.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: doctor_id
+        description: >
+          The ID of the doctor associated with this calendar. May be null if the calendar is not assigned to a specific doctor (e.g., lab services).
+      - name: clinic_id
+        description: Identifier for the clinic to which the calendar belongs.
+
+      - name: calendar_type
+        description: >
+          The classification of the calendar, indicating whether it’s a doctor calendar or service calendar (e.g., for lab tests, imaging, etc.).
+
+      - name: clinic_name
+        description: The name of the clinic location associated with the calendar.
+
+      - name: location_address
+        description: Physical address of the clinic or service location mapped by the calendar.
+
+      - name: service_type
+        description: >
+          The type of medical service associated with the calendar (e.g., general practice, radiology, blood tests).
+          Especially relevant for calendars without a specific doctor.
+
+      - name: calendar_status
+        description: Current status of the calendar (e.g., active, inactive, archived).
+
+      - name: created_at
+        description: Timestamp when the calendar was created.
+
+      - name: updated_at
+        description: Timestamp of the last update made to the calendar.
+
+      - name: removed_at
+        description: Timestamp when the calendar was removed or deactivated. Null if still active.

@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: stg_doc_planner_external__external_bookings_event
+    description: >
+      Tracks the history of events related to external bookings made by doctors or clinics
+      through integrated external systems (e.g., phone, other booking platforms). This table includes
+      event-level data capturing changes in booking status, values, and sources.
+
+    columns:
+      - name: booking_event_id
+        description: Unique identifier for the external booking event.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: booking_id
+        description: Identifier of the external booking associated with the event.
+        data_tests:
+          - not_null
+      - name: event_type
+        description: Type of event that occurred (e.g., booking-created, booking-reschedules, booking-cancelled).
+
+      - name: old_value
+        description: Previous value before the event was applied (e.g., old status or time).
+
+      - name: new_value
+        description: New value after the event occurred.
+
+      - name: status
+        description: Current status of the external booking after the event (e.g., confirmed, cancelled).
+
+      - name: created_at
+        description: Timestamp when the external booking event was recorded.
+
+      - name: source
+        description: Source of the booking creation or update (e.g., mobile app, web widget).
+
+      - name: calendar_id
+        description: Calendar associated with the booking, representing a schedule or location.
+
+      - name: event_owner_type
+        description: Role that initiated the event (e.g., doctor, secretary).
+        data_tests:
+        - accepted_values:
+              values: ['doctor', 'secretary']
+      - name: _dbt_insert_at
+        description: Timestamp when the record was processed by dbt for incremantal loading tracking.

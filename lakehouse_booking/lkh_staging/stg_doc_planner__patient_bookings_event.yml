@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: stg_doc_planner__patient_bookings_event
+    description: >
+      Incremental staging model capturing all booking-related events for patients.
+      These events represent lifecycle changes to patient bookings such as status updates,
+      reschedulings, or source modifications. The model includes metadata on the booking source,
+      associated calendar, and ownership type (e.g., patient, doctor, secretary).
+      Used to support engagement and booking flow analytics.
+
+    columns:
+      - name: booking_event_id
+        description: Unique identifier for the booking event.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: booking_id
+        description: Identifier linking the event to a specific booking.
+        data_tests:
+          - not_null
+      - name: event_type
+        description: Type of the booking event (e.g., booking-created, booking-reschedules, booking-cancelled).
+
+      - name: old_value
+        description: The previous value of a booking attribute before the event occurred.
+
+      - name: new_value
+        description: The updated value of a booking attribute due to the event.
+
+      - name: status
+        description: Current status of the booking after the event (e.g., confirmed, cancelled).
+
+      - name: created_at
+        description: Timestamp when the event was logged in the system.
+
+      - name: source
+        description: Source of the booking creation or update (e.g., mobile app, web widget).
+
+      - name: calendar_id
+        description: Identifier of the calendar associated with the booking event.
+
+      - name: event_owner_type
+        description: Type of user who initiated the event (e.g., patient, relative to patient(in case the real patient is a minor)).
+        data_tests:
+        - accepted_values:
+              values: ['patient', 'relative to patient']
+      - name: _dbt_insert_at
+        description: Timestamp when the record was processed by dbt for incremantal loading tracking.

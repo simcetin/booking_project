@@ -1,0 +1,77 @@
+version: 2
+
+sources:
+  - name: staging_doc_planner
+    description: "This is the staging environment for the DocPlanner data warehouse, where the data for doctors, patients, clinics, and bookings is stored. It helps to ensure smooth integration between the operational database and data processing pipelines."
+    database: raw_prod
+    freshness:
+      error_after:
+        period: hour
+        count: 24
+
+    tables:
+      - name: patients
+        description: "Contains information about patients, including their personal details and identifiers. Patients can book visits for themselves or for others, such as underage children. This table tracks their bookings and engagement patterns."
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
+
+      - name: clinics
+        description: "Contains information about the clinics, including their locations, services offered, and associated doctors. A clinic can have multiple branches with different doctor calendars for bookings."
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
+
+      - name: doctors
+        description: "Tracks doctor-specific details, such as their professional information, locations (if they work in multiple clinics), and calendars. Doctors can book appointments for patients or have patient bookings through their individual practice or clinic locations."
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
+
+      - name: calendars
+        description: "Contains the mapping of doctors' schedules to virtual calendars, including clinic and individual practice schedules. A doctor may have multiple calendars if they work at multiple locations or with different services (e.g., clinical tests, x-rays)."
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
+
+      - name: patient_bookings
+        description: "Tracks patient appointments, including those booked through the patient-side interface or by doctors for patients. This table records booking details, including booking dates, source (e.g., mobile app, website), and related patient and doctor information."
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
+
+      - name: patient_bookings_event
+        description: "Stores event data related to patient bookings, including events like booking creation, cancellations, and changes. This helps track the lifecycle of a booking, its status, and how it interacts with other data sources."
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10

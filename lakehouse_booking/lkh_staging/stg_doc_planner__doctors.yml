@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: stg_doc_planner__doctors
+    description: >
+      This model standardizes the core attributes of doctors in the system.
+      A doctor can work independently or be associated with one or more clinics.
+      Doctors provide services through calendars, which may span multiple locations or clinic branches.
+
+    columns:
+      - name: doctor_id
+        description: Unique identifier of the doctor in the system.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: name
+        description: First name of the doctor.
+
+      - name: surname
+        description: Last name (family name) of the doctor.
+
+      - name: email
+        description: Email address used for communication and system access.
+
+      - name: phone_number
+        description: Contact number associated with the doctor.
+
+      - name: specialization
+        description: Medical specialization or area of expertise (e.g., cardiology, pediatrics).
+
+      - name: created_at
+        description: Timestamp when the doctor record was created in the system.
+
+      - name: updated_at
+        description: Timestamp of the last update to the doctor record.

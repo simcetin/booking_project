@@ -1,0 +1,43 @@
+version: 2
+
+sources:
+  - name: staging_doc_planner_external
+    description: >
+      This source captures external booking data integrated into the system.
+      These bookings are typically made by doctors or secretaries for patients,
+      often originating from sources outside the DocPlanner platform, such as
+      phone reservations, external systems, or offline scheduling tools.
+    database: raw_prod
+    freshness:
+      error_after:
+        period: hour
+        count: 24
+
+    tables:
+      - name: external_bookings
+        description: >
+          Contains records of visits booked through external sources outside of the DocPlanner platform,
+          such as phone calls or integrated third-party systems. These are usually entered by doctors or secretaries,
+          and not directly by patients. The table includes appointment details like time, calendar, doctor, and patient identifiers.
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
+
+      - name: external_bookings_event
+        description: >
+          Stores event-level data related to external bookings, such as creation,
+          updates, rescheduling, or cancellations of externally-sourced appointments.
+          These events track the lifecycle and operational behavior of bookings not initiated by patients.
+        data_tests:
+          - elementary.volume_anomalies:
+              detection_period:
+                period: day
+                count: 1
+              ignore_small_changes:
+                spike_failure_percent_threshold: 10
+                drop_failure_percent_threshold: 10
