@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: mart_doctors_monthly
+    description: >
+      Aggregated monthly doctor booking metrics. 
+      This mart provides insight into doctor engagement, booking volume, patient visits, and distinct bookings
+      for both first engagement and overall engagement.
+
+    columns:
+      - name: year_month
+        description: The month and year (e.g., '2025-04') representing the aggregation period.
+      - name: doctor_id
+        description: Unique identifier of the doctor.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_doctors')
+              pk_column_name: doctor_id
+      - name: is_engaged_month
+        description: Boolean flag indicating if the doctor was engaged during the month based on booking and mobile app usage criteria.
+      - name: first_engaged_month
+        description: The first month the doctor became engaged.
+      - name: is_first_engaged_month
+        description: Boolean flag indicating if the doctor was first engaged in the month.
+      - name: nb_of_bookings
+        description: Total number of confirmed bookings made for the doctor in the month.
+      - name: nb_of_unique_patient_visits
+        description: Number of distinct patients who visited the doctor during the month.
+      - name: nb_of_bookings_first_engaged_month
+        description: Total number of confirmed bookings made for the doctor in their first engaged month.
+      - name: nb_of_unique_patient_visits_first_engaged_month
+        description: Number of distinct patients who visited the doctor during their first engaged month.
+      - name: nb_of_bookings_engaged_month
+        description: Total number of confirmed bookings made for the doctor during an engaged month.
+      - name: nb_of_unique_patient_visits_engaged_month
+        description: Number of distinct patients who visited the doctor during an engaged month.
+      - name: has_at_least_3_patient_bookings_in_engaged_month
+        description: Boolean flag indicating if the doctor had at least 3 unique patient visits in an engaged month.
+      - name: has_at_least_1_patient_bookings_in_first_engaged_month
+        description: Boolean flag indicating if the doctor had at least 1 unique patient booking in their first engaged month.
+      - name: has_at_least_2_patient_bookings_in_first_engaged_month
+        description: Boolean flag indicating if the doctor had at least 2 unique patient bookings in their first engaged month.
+        
+    data_tests:
+      - dbt_constraints.primary_key:
+          column_names:
+            - year_month
+            - doctor_id

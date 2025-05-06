@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: mart_patient_metrics
+    description: >
+      Aggregated monthly patient booking metrics derived from the `fact_patients_engagement` model. 
+      This mart provides insight into overall patient engagement, booking volume, mobile usage, and rebooking behavior.
+
+    columns:
+      - name: year_month
+        description: The month and year (e.g., '2025-04') representing the aggregation period.
+        data_tests:
+          - unique
+      - name: nb_of_patient_bookings
+        description: Total number of confirmed patient bookings in the month.
+      - name: nb_of_patient_bookings_w_mobile_app
+        description: Number of patient bookings made via the mobile app in the month.
+      - name: nb_of_patient_rebookings
+        description: Number of patients who rebooked within 30 days in the month.
+      - name: nb_of_engaged_patients
+        description: Number of patients considered engaged in the month based on the defined engagement criteria.
+      - name: rebooking_patient_booking_rate
+        description: >
+          Percentage of bookings that were rebookings (within 30 days),
+          calculated as (rebookings / total bookings) * 100.
+      - name: mobile_booking_patient_rate
+        description: >
+          Percentage of bookings made via the mobile app,
+          calculated as (mobile app bookings / total bookings) * 100.

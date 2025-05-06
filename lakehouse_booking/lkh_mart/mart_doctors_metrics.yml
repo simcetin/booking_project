@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: mart_doctors_metrics
+    description: >
+      Monthly aggregated engagement metrics for doctors. Includes counts of engaged and newly engaged doctors,
+      unique patient visits, and percentages relevant to business KPIs.
+    columns:
+      - name: year_month
+        description: The month and year (e.g., '2025-04') representing the aggregation period.
+        data_tests:
+          - unique
+      - name: number_of_doctors
+        description: "Total number of unique doctors active that month"
+      - name: number_of_engaged_doctors
+        description: "Number of doctors marked as engaged in the month"
+      - name: number_of_new_engaged_doctors
+        description: "Number of doctors who became engaged for the first time in this month"
+      - name: nb_of_unique_patient_visits_for_engaged_doctors
+        description: "Total number of unique patient visits for all engaged doctors in the month"
+      - name: nb_of_unique_patient_visits_for_new_engaged_doctors
+        description: "Total number of unique patient visits for doctors newly engaged in the month"
+      - name: number_of_engaged_doctors_w_at_least_3_patient_bookings
+        description: "Count of engaged doctors who had at least 3 unique patient bookings this month"
+      - name: number_of_new_engaged_doctors_w_at_least_1_patient_bookings
+        description: "Count of newly engaged doctors with at least 1 unique patient booking in their first engaged month"
+      - name: number_of_new_engaged_doctors_w_at_least_2_patient_bookings
+        description: "Count of newly engaged doctors with at least 2 unique patient bookings in their first engaged month"
+      - name: percent_of_engaged_doctors
+        description: "Percentage of all doctors who are engaged in the current month"
+      - name: perc_of_engaged_doctors_w_at_least_3_patient_bookings
+        description: "Percentage of engaged doctors with at least 3 unique patient bookings"
+      - name: perc_of_new_engaged_doctors_w_at_least_1_patient_bookings
+        description: "Percentage of newly engaged doctors with at least 1 patient booking in their first engaged month"

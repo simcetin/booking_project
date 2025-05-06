@@ -1,0 +1,16 @@
+select
+year_month
+, count(doctor_id) as number_of_doctors
+, count(case when is_engaged_month then doctor_id end) as number_of_engaged_doctors
+, count(case when is_first_engaged_month then doctor_id end) as number_of_new_engaged_doctors
+, sum(case when is_engaged_month then nb_of_unique_patient_visits_engaged_month end ) as  nb_of_unique_patient_visits_for_engaged_doctors
+, sum (case when is_engaged_month then nb_of_unique_patient_visits_first_engaged_month end) as nb_of_unique_patient_visits_for_new_engaged_doctors
+, count(has_at_least_3_patient_bookings_in_engaged_month) as number_of_engaged_doctors_w_at_least_3_patient_bookings
+, count(has_at_least_1_patient_bookings_in_first_engaged_month) as number_of_new_engaged_doctors_w_at_least_1_patient_bookings
+, count(has_at_least_2_patient_bookings_in_first_engaged_month) as number_of_new_engaged_doctors_w_at_least_2_patient_bookings
+, (number_of_engaged_doctors/number_of_doctors)*100 as percent_of_engaged_doctors
+, (number_of_engaged_doctors_w_at_least_3_patient_bookings/number_of_engaged_doctors)*100 as 
+perc_of_engaged_doctors_w_at_least_3_patient_bookings
+, (number_of_new_engaged_doctors_w_at_least_1_patient_bookings/number_of_new_engaged_doctors)*100 as
+perc_of_new_engaged_doctors_w_at_least_1_patient_bookings
+from {{ ref('mart_doctors_monthly') }}
