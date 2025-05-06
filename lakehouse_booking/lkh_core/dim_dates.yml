@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: dim_dates
+    description: >
+      A date dimension table that supports time-based analytics. It includes flags for full weeks, 
+      monthly boundaries, and week ranges. Full weeks are defined as weeks with exactly 7 days 
+      within the same month.
+
+    columns:
+      - name: date_day
+        description: A single day represented as a date. This is the primary key for the date dimension.
+        tests:
+          - not_null
+          - unique
+      - name: year_month
+        description: The first day of the month the date belongs to (e.g., 2025-05-01 for May 2025).
+      - name: is_full_week
+        description: Boolean flag indicating whether the week containing this date is a full 7-day week entirely within the same month.
+      - name: beginning_of_week
+        description: The first day (Monday) of the week that the date belongs to.
+      - name: day_of_week
+        description: Numeric representation of the day of the week (1 = Monday, 7 = Sunday).
+      - name: end_of_week
+        description: The last day (Sunday) of the week the date belongs to.
+      - name: number_of_full_weeks
+        description: The number of full weeks (7 days all within the month) in the corresponding month. 

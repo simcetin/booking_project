@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: dim_clinics
+    description: >
+      This model extracts and standardizes clinic-related data. A clinic represents a healthcare facility where one or more doctors provide services.
+      Clinics may have multiple branches in different locations and can be associated with individual doctors or groups of practitioners.
+
+    columns:
+      - name: clinic_id
+        description: Unique identifier for the clinic.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: clinic_name
+        description: The name of the clinic or clinic branch.
+      - name: clinic_address
+        description: The physical address of the clinic location.
+      - name: is_independent
+        description: >
+          Indicates whether the clinic is independently operated (e.g., by a single doctor or small group) or part of a larger clinic network.
+          `true` means the clinic is independent; `false` means it is part of a larger organization.

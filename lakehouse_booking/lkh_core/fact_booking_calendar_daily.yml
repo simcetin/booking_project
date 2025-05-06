@@ -1,0 +1,69 @@
+version: 2
+
+models:
+  - name: fact_booking_calendar_daily
+    description: >
+      This fact table provides a daily overview of each calendar along with their related bookings, 
+      for the full time range during which the calendar was active. 
+      
+      It combines data from `dim_dates`, `dim_calendars`, and `dim_bookings` to support detailed 
+      time-based analyses such as patient engagement, doctor engagement, calendar usage.
+      
+      Each calendar is represented for every date from the month it was created, until the month calendar was removed 
+      (or a far-future placeholder date, if still active). 
+      Bookings are joined to this date-calendar matrix
+      to show actual appointment activity on each day, but the calendar will still appear in the dataset even 
+      for days when no bookings occurred.
+
+      The table includes only dates up to the current month, so future periods are excluded.
+    
+    columns:
+      - name: booking_calendar_daily_pk
+        description: Surrogate primary key combining date and booking ID for uniqueness.
+        data_tests:
+          - not_null
+          - unique
+      - name: date_day
+        description: Specific calendar date.
+      - name: year_month
+        description: The first day of the month the date belongs to.
+      - name: is_full_week
+        description: Boolean flag indicating whether the week containing this date is a full 7-day week entirely within the same month.
+      - name: beginning_of_week
+        description: First day (Monday) of the week the date belongs to.
+      - name: end_of_week
+        description: Last day (Sunday) of the week the date belongs to.
+      - name: calendar_id
+        description: Unique identifier of the calendar where the booking occurred.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_calendars')
+              pk_column_name: calendar_id
+      - name: number_of_full_weeks
+        description: Total number of full weeks in the corresponding month.
+      - name: booking_id
+        description: Unique identifier for the booking, if one occurred on the given date.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_bookings')
+              pk_column_name: booking_id
+      - name: patient_id
+        description: ID of the patient who made the booking.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_patients')
+              pk_column_name: patient_id
+      - name: booking_type
+        description: Type of the booking (e.g., online, offline).
+      - name: booked_by
+        description: Who booked the visit (e.g., patient, doctor, secretary).
+      - name: booked_calendar_id
+        description: ID of the calendar that the booking is associated with.
+      - name: doctor_id
+        description: ID of the doctor associated with the booking.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_doctors')
+              pk_column_name: doctor_id
+      - name: booking_date_time
+        description: Timestamp of when the booking was made.

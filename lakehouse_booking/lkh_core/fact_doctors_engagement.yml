@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: fact_doctors_engagement
+    description: >
+      This fact table measures monthly doctor engagement based on booking activity during full calendar weeks.
+
+      A doctor is considered engaged in a given week if they meet the following criteria:
+      - At least 5 confirmed bookings made during a full calendar week,
+      - And at least 1 of those bookings was made via the mobile app.
+
+      A doctor is considered engaged in a given month if they meet these weekly engagement criteria for each full week in that month.
+
+      This model tracks:
+      - The number of engaged weeks per doctor and month,
+      - Whether the doctor was engaged for the entire month,
+      - The first month of engagement,
+      - Whether a given month is their first engaged month.
+
+      Useful for understanding platform adoption, doctor activity levels, and supporting performance incentive programs.
+
+    columns:
+      - name: year_month
+        description: The year and month associated with the doctor’s activity (truncated to month).
+      - name: doctor_id
+        description: Unique identifier of the doctor.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_doctors')
+              pk_column_name: doctor_id
+      - name: count_of_engagement_week
+        description: Number of full calendar weeks in a given month where the doctor met weekly engagement criteria.
+      - name: is_engaged_month
+        description: Boolean flag indicating if the doctor was engaged for all full calendar weeks in the month.
+      - name: first_engaged_month
+        description: The first month in which the doctor met monthly engagement criteria.
+      - name: is_first_engaged_month
+        description: Boolean flag indicating whether the given month is the doctor’s first month of engagement.
+
+    data_tests:
+      - dbt_constraints.primary_key:
+          column_names:
+            - year_month
+            - doctor_id

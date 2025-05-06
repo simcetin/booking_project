@@ -1,0 +1,50 @@
+version: 2
+
+models:
+  - name: fact_booking_events
+    description: >
+      This fact table consolidates all booking events from both internal and external systems 
+      to provide a unified view of changes made to bookings over time. 
+      
+      Events may include status changes (e.g., confirmed, cancelled).
+      The data comes from `stg_docplanner__patient_bookings_events` and 
+      `stg_docplanner_external__booking_events`, merged into a single stream.
+
+      The table is incrementally built using the `_dbt_insert_at` timestamp field to ensure efficient updates
+      and late-arrived data.
+      It's designed to support detailed event-level analysis, auditing, and tracking user behavior 
+      across booking platforms and ownership types.
+
+    columns:
+      - name: booking_event_id
+        description: Unique identifier for the booking event.
+        data_tests:
+          - dbt_constraints.primary_key
+      - name: booking_id
+        description: ID of the booking associated with the event.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_bookings')
+              pk_column_name: booking_id
+      - name: event_type
+        description: Type of event (e.g., creation, reschedule, cancellation).
+      - name: old_value
+        description: Previous value before the change occurred (nullable depending on event type).
+      - name: new_value
+        description: New value after the change occurred.
+      - name: status
+        description: Current status of the booking after the event (e.g., confirmed, cancelled).
+      - name: created_at
+        description: Timestamp when the event occurred.
+      - name: source
+        description: Originating source of the booking or event (e.g., mobile app, website, phone).
+      - name: calendar_id
+        description: Calendar where the event is registered.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_calendars')
+              pk_column_name: calendar_id
+      - name: event_owner_type
+        description: Type of user who performed the action (e.g., patient, doctor, secretary).
+      - name: _dbt_insert_at
+        description: Timestamp when the record was inserted or refreshed by dbt.

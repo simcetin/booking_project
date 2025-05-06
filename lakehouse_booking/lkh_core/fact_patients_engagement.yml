@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: fact_patients_engagement
+    description: >
+      This fact table tracks monthly patient engagement based on their booking behavior.
+
+      A patient is considered *engaged in a given month if:
+      - They had a confirmed booking in the previous month,
+      - They made at least 2 bookings in the current month,
+      - And at least one of those bookings was made via the mobile app.
+
+      The model also identifies rebooking behavior (i.e., whether the patient booked again within 30 days).
+
+    columns:
+      - name: year_month
+        description: The year and month of booking activity.
+      - name: patient_id
+        description: Unique identifier of the patient.
+        data_tests:
+          - dbt_constraints.foreign_key:
+              pk_table_name: ref('dim_patients')
+              pk_column_name: patient_id
+      - name: number_of_bookings
+        description: Total number of confirmed bookings made by the patient in the given month.
+      - name: number_of_bookings_w_mobile_app
+        description: Number of bookings made via the mobile app in the given month.
+      - name: is_rebooking
+        description: >
+          Boolean flag indicating whether the patient rebooked within 30 days of their previous appointment.
+      - name: is_engaged_month
+        description: >
+          Boolean flag indicating whether the patient met monthly engagement criteria:
+          - 1-month gap from previous booking,
+          - At least 2 bookings in the month,
+          - At least 1 made via mobile app.
+
+    data_tests:
+      - dbt_constraints.primary_key:
+          column_names:
+            - year_month
+            - patient_id
